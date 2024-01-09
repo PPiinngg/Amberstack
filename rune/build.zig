@@ -1,8 +1,10 @@
 const std = @import("std");
 
+const config: @import("config.zig") = .{};
+
 pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
-    const optimize: std.builtin.OptimizeMode = if (@import(""));
+    const optimize: std.builtin.OptimizeMode = if (config.is_debug_build) .Debug else .ReleaseSmall;
 
     const exe = b.addExecutable(.{
         .name = "rune",

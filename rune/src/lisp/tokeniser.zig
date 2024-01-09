@@ -34,7 +34,8 @@ pub fn tokeniser(alloc: std.mem.Allocator, expr: []const u8) ![][]const u8 {
             };
 
         // Parens //
-        if (new_token and (expr[i] == '(' or expr[i] == ')')) {
+        if (expr[i] == '(' or expr[i] == ')') {
+            if (!new_token) try tokens.append(expr[token_start..i]);
             try tokens.append(expr[i .. i + 1]);
             new_token = true;
             token_start = i + 1;
@@ -50,6 +51,7 @@ pub fn tokeniser(alloc: std.mem.Allocator, expr: []const u8) ![][]const u8 {
             token_start = i + 1;
             continue;
         }
+
         new_token = false;
     }
 

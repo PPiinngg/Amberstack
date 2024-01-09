@@ -1,6 +1,7 @@
 const std = @import("std");
 const config = @import("config");
 
+const lisp = @import("lisp/entry.zig");
 const log = @import("util/log.zig");
 const text = @import("util/text.zig");
 
@@ -19,7 +20,6 @@ fn entrypoint(
     stdin: std.fs.File.Reader,
     stdout: std.fs.File.Writer,
 ) !void {
-    _ = alloc;
     var input_buffer: [config.repl_input_buffer_bytes]u8 = undefined;
 
     while (true) {
@@ -36,7 +36,7 @@ fn entrypoint(
             log.logError(null, "No input");
         } else {
             if (input_slice[0] == '(')
-                log.logTodo("Execute lisp expression")
+                lisp.evaluateLispExpression(alloc, input_slice)
             else
                 log.logTodo("Execute shell command");
         }

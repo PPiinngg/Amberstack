@@ -1,24 +1,42 @@
 const std = @import("std");
+// const config = @import("config");
 
-pub fn main() !void {
-    // Prints to stderr (it's a shortcut based on `std.io.getStdErr()`)
-    std.debug.print("All your {s} are belong to us.\n", .{"codebase"});
+const log = @import("util/log.zig");
+const text = @import("util/text.zig");
 
-    // stdout is for the actual output of your application, for example if you
-    // are implementing gzip, then only the compressed bytes should be sent to
-    // stdout, not any debugging messages.
-    const stdout_file = std.io.getStdOut().writer();
-    var bw = std.io.bufferedWriter(stdout_file);
-    const stdout = bw.writer();
-
-    try stdout.print("Run `zig build test` to run the tests.\n", .{});
-
-    try bw.flush(); // don't forget to flush!
+pub fn main() void {
+    entrypoint() catch |err| log.logCriticalError(err, "Unhandled error bubbled up to top scope");
 }
 
-test "simple test" {
-    var list = std.ArrayList(i32).init(std.testing.allocator);
-    defer list.deinit(); // try commenting this out and see if zig detects the memory leak!
-    try list.append(42);
-    try std.testing.expectEqual(@as(i32, 42), list.pop());
+fn entrypoint() !void {
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    const alloc = gpa.allocator();
+    _ = alloc;
+
+    const stdout = std.io.getStdOut().writer();
+    const stdin = std.io.getStdIn().reader();
+    var input_buffer: [1 << 14]u8 = undefined;
+
+    // REPL //
+    while (true) {
+        stdout.writeAll("ᛮ ") catch {};
+
+        // TODO: Replace with custom readline
+        var input_slice: []u8 = stdin.readUntilDelimiter(input_buffer[0..], '\n') catch |err| {
+            log.logError(err, "Unable to read stdin");
+            continue;
+        };
+        input_slice = text.trimTrailingWhitespace(input_slice);
+
+        if (input_slice.len == 0) {
+            log.logError(null, "No input");
+        } else {
+            if (input_slice[0] == '(')
+                log.logTodo("Execute lisp expression")
+            else
+                log.logTodo("Execute shell command");
+        }
+
+        stdout.writeAll("\n") catch {};
+    }
 }

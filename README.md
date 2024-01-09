@@ -8,6 +8,6 @@ Ideally this project would culminate in a set of tools that are small and light 
 ---
 ## Programs
 Amber currently aims to include:
-- [ ] A shell with a small dialect of Lisp as a scripting language
+- [ ] [A shell with a small dialect of Lisp as a scripting language](https://github.com/PPiinngg/Amberstack/tree/main/rune)
 - [ ] A TUI Gemini/Gopher client
 - [ ] A TUI file explorer

@@ -19,7 +19,7 @@ pub fn build(b: *std.Build) void {
             @as(*field.type, @constCast(@ptrCast(field.default_value))).*,
         );
     }
-    // TODO: Figure out how to access these in the code
+    exe.root_module.addOptions("config", config_fields);
 
     b.installArtifact(exe);
 

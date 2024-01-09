@@ -1,23 +1,27 @@
 const std = @import("std");
-// const config = @import("config");
+const config = @import("config");
 
 const log = @import("util/log.zig");
 const text = @import("util/text.zig");
 
 pub fn main() void {
-    entrypoint() catch |err| log.logCriticalError(err, "Unhandled error bubbled up to top scope");
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    entrypoint(
+        gpa.allocator(),
+        std.io.getStdIn().reader(),
+        std.io.getStdOut().writer(),
+    ) catch |err|
+        log.logCriticalError(err, "Unhandled error bubbled up to top scope");
 }
 
-fn entrypoint() !void {
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    const alloc = gpa.allocator();
+fn entrypoint(
+    alloc: std.mem.Allocator,
+    stdin: std.fs.File.Reader,
+    stdout: std.fs.File.Writer,
+) !void {
     _ = alloc;
+    var input_buffer: [config.repl_input_buffer_bytes]u8 = undefined;
 
-    const stdout = std.io.getStdOut().writer();
-    const stdin = std.io.getStdIn().reader();
-    var input_buffer: [1 << 14]u8 = undefined;
-
-    // REPL //
     while (true) {
         stdout.writeAll("ᛮ ") catch {};
 

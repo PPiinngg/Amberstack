@@ -7,7 +7,7 @@ const text = @import("util/text.zig");
 
 pub fn main() void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    entrypoint(
+    enterRepl(
         gpa.allocator(),
         std.io.getStdIn().reader(),
         std.io.getStdOut().writer(),
@@ -15,7 +15,7 @@ pub fn main() void {
         log.logCriticalError(err, "Unhandled error bubbled up to top scope");
 }
 
-fn entrypoint(
+fn enterRepl(
     alloc: std.mem.Allocator,
     stdin: std.fs.File.Reader,
     stdout: std.fs.File.Writer,

@@ -1,5 +1,5 @@
-const std = @import("std");
 const config = @import("config");
+const std = @import("std");
 
 const lisp = @import("lisp/entry.zig");
 const log = @import("util/log.zig");
@@ -23,7 +23,7 @@ fn enterRepl(
     var input_buffer: [config.repl_input_buffer_bytes]u8 = undefined;
 
     while (true) {
-        stdout.writeAll("ᛮ ") catch {};
+        stdout.writeAll(config.prompt_glyph) catch {};
 
         // TODO: Replace with custom readline
         var input_slice: []u8 = stdin.readUntilDelimiter(input_buffer[0..], '\n') catch |err| {
@@ -36,7 +36,7 @@ fn enterRepl(
             log.logError(null, "No input");
         } else {
             if (input_slice[0] == '(')
-                lisp.evaluateLispExpression(alloc, input_slice)
+                lisp.evaluate(alloc, input_slice)
             else
                 log.logTodo("Execute shell command");
         }

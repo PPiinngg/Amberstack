@@ -18,12 +18,14 @@ pub fn build(b: *std.Build) void {
         config_fields.addOption(
             field.type,
             field.name,
-            @as(*field.type, @constCast(@ptrCast(field.default_value))).*,
+            @as(*field.type, @constCast(@alignCast(@ptrCast(field.default_value)))).*,
         );
     }
     exe.root_module.addOptions("config", config_fields);
 
     b.installArtifact(exe);
+
+    // (cmd (concat "rune -e \"(+" (intersperse_with (list 1 8 2 4 7 0 9 2 8 9 2) " ") ")\""))
 
     const run_cmd = b.addRunArtifact(exe);
     run_cmd.step.dependOn(b.getInstallStep());

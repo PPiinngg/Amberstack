@@ -1,0 +1,2 @@
+# Kaolin
+Kaolin is a standard library for forth used across my personal tools. It currently relies on some of the nonstandard words in gforth but I aim to eventually have it work only with ANS forth words.
